@@ -1,3 +1,12 @@
+// =============================
+// 🔑 COLE SUA API KEY AQUI
+// =============================
+const API_KEY = "AIzaSyDbE-9a5Cz3o9sEbPqYRfd5Ye94QhmdDGw";
+
+
+// =============================
+// 🚀 FUNÇÃO PRINCIPAL
+// =============================
 async function analisar() {
   let pergunta = prompt("Cole a pergunta aqui:");
 
@@ -5,7 +14,7 @@ async function analisar() {
   respostaTela.innerText = "Analisando...";
 
   try {
-    let resposta = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=SUA_CHAVE_AQUI", {
+    let resposta = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -15,7 +24,7 @@ async function analisar() {
           {
             parts: [
               {
-                text: `Responda a pergunta e diga a alternativa correta:\n${pergunta}`
+                text: `Responda a pergunta abaixo e diga a alternativa correta:\n\n${pergunta}`
               }
             ]
           }
@@ -25,12 +34,17 @@ async function analisar() {
 
     let dados = await resposta.json();
 
-    let texto = dados.candidates[0].content.parts[0].text;
+    console.log("RESPOSTA DA IA:", dados); // debug
 
-    respostaTela.innerText = texto;
+    if (dados.candidates && dados.candidates.length > 0) {
+      let texto = dados.candidates[0].content.parts[0].text;
+      respostaTela.innerText = texto;
+    } else {
+      respostaTela.innerText = "Erro: resposta vazia da IA";
+    }
 
   } catch (erro) {
     respostaTela.innerText = "Erro ao conectar com IA";
-    console.error(erro);
+    console.error("ERRO:", erro);
   }
 }
