@@ -34,7 +34,7 @@ async function analisar() {
 
     let dados = await resposta.json();
 
-    console.log("RESPOSTA DA IA:", dados); // debug
+    console.log("RESPOSTA DA IA:", dados);
 
     if (dados.candidates && dados.candidates.length > 0) {
       let texto = dados.candidates[0].content.parts[0].text;
