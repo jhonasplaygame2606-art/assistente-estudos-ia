@@ -4,19 +4,33 @@ async function analisar() {
   let respostaTela = document.getElementById("resposta");
   respostaTela.innerText = "Analisando...";
 
-  let resposta = await fetch("https://api.exemplo.com/responder", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ pergunta })
-  });
+  try {
+    let resposta = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=SUA_CHAVE_AQUI", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [
+              {
+                text: `Responda a pergunta e diga a alternativa correta:\n${pergunta}`
+              }
+            ]
+          }
+        ]
+      })
+    });
 
-  let dados = await resposta.json();
+    let dados = await resposta.json();
 
-  respostaTela.innerText = `
-Resposta: ${dados.resposta}
+    let texto = dados.candidates[0].content.parts[0].text;
 
-Explicação: ${dados.explicacao}
-  `;
+    respostaTela.innerText = texto;
+
+  } catch (erro) {
+    respostaTela.innerText = "Erro ao conectar com IA";
+    console.error(erro);
+  }
 }
